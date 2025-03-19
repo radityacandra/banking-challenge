@@ -6,20 +6,17 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/radityacandra/banking-challenge/api"
 	"github.com/radityacandra/banking-challenge/internal/application/user/types"
+	"github.com/radityacandra/banking-challenge/pkg/util"
 )
 
 func (h *Handler) UserPost(ctx echo.Context) error {
 	var reqBody api.UserPostRequest
 	if err := ctx.Bind(&reqBody); err != nil {
-		return ctx.JSON(http.StatusBadRequest, api.DefaultErrorResponse{
-			Remarks: err.Error(),
-		})
+		return util.ReturnBadRequest(ctx, err, h.Logger)
 	}
 
 	if err := ctx.Validate(reqBody); err != nil {
-		return ctx.JSON(http.StatusBadRequest, api.DefaultErrorResponse{
-			Remarks: err.Error(),
-		})
+		return util.ReturnBadRequest(ctx, err, h.Logger)
 	}
 
 	reqCtx := ctx.Request().Context()
@@ -29,9 +26,7 @@ func (h *Handler) UserPost(ctx echo.Context) error {
 		IdentityNo: reqBody.Nik,
 	})
 	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, api.DefaultErrorResponse{
-			Remarks: err.Error(),
-		})
+		return util.ReturnError(ctx, err, h.Logger)
 	}
 
 	return ctx.JSON(http.StatusOK, api.UserPostResponse{

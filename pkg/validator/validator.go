@@ -38,6 +38,13 @@ func NewValidator() *Validator {
 		return t
 	})
 
+	validate.RegisterTranslation("gt", translator, func(ut ut.Translator) error {
+		return ut.Add("gt", "{0} must be greater than {1}", true)
+	}, func(ut ut.Translator, fe validator.FieldError) string {
+		t, _ := ut.T("gt", fe.Field(), fe.Param())
+		return t
+	})
+
 	return &Validator{
 		Validator:  validate,
 		Translator: translator,

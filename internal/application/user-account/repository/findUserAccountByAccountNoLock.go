@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/jmoiron/sqlx"
@@ -26,6 +27,10 @@ func (r *Repository) FindUserAccountByAccountNoLock(ctx context.Context, account
 
 	var userAccount model.UserAccount
 	if err := row.StructScan(&userAccount); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = errors.Join(err, types.ErrUserAccountNotFound)
+		}
+
 		return nil, errors.Join(err, tx.Rollback())
 	}
 
