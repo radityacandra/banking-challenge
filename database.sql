@@ -19,3 +19,14 @@ CREATE TABLE IF NOT EXISTS user_accounts (
   updated_at int8,
   updated_by VARCHAR
 );
+
+CREATE TABLE IF NOT EXISTS transactions (
+  id VARCHAR PRIMARY KEY,
+  user_account_id VARCHAR NOT NULL,
+  transaction_type VARCHAR NOT NULL,
+  amount int8 NOT NULL,
+  created_at int8 NOT NULL,
+  created_by VARCHAR NOT NULL,
+  updated_at int8,
+  updated_by VARCHAR
+)
