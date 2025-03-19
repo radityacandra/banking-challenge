@@ -1,0 +1,5 @@
+package: useraccount
+output: ./user-account/userAccountApi.gen.go
+generate:
+  echo-server: true
+  models: true

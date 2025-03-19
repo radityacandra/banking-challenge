@@ -1,0 +1,191 @@
+openapi: 3.0.0
+info:
+  title: Users API
+  description: API to perform user data manipulation
+  version: 1.0.0
+tags:
+  - name: users
+    description: Endpoints on user domain
+  - name: user-accounts
+    description: Endpoints on user account domain
+paths:
+  /daftar:
+    post:
+      tags:
+        - users
+      summary: Register a new user
+      description: Register a new user along with bank account creation
+      operationId: UserPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPostRequest'
+      responses:
+        '200':
+          description: Success - Returns detail of user data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPostResponse'
+        '400':
+          description: Error - Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+  /tabung:
+    post:
+      tags:
+        - user-accounts
+      summary: Store money to user account (credit transaction)
+      description: Perform credit transaction to user account
+      operationId: TransactionCreditPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        '200':
+          description: Success - Returns latest user account balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Error - User Account Number Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+  /tarik:
+    post:
+      tags:
+        - user-accounts
+      summary: Withdraw money from user account (debit transaction)
+      description: Perform debit transaction to user account
+      operationId: TransactionDebitPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+      responses:
+        '200':
+          description: Success - Returns latest user account balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Error - User Account Number Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+  /saldo/{no_rekening}:
+    get:
+      tags:
+        - user-accounts
+      summary: get latest user account balance
+      description: get latest user account balance
+      operationId: AccountBalanceGet
+      parameters:
+        - $ref: '#/components/parameters/AccountNumberParam'
+      responses:
+        '200':
+          description: Success - Returns latest user account balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Error - User Account Number Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultErrorResponse'
+components:
+  parameters:
+    AccountNumberParam:
+      name: no_rekening
+      in: path
+      required: true
+      description: user bank account number
+      schema:
+        type: string
+      x-oapi-codegen-extra-tags:
+        validate: required
+  schemas:
+    DefaultErrorResponse:
+      type: object
+      required:
+        - remarks
+      properties:
+        remarks:
+          type: string
+          description: error description
+          example: failed to validate nama field
+    UserPostRequest:
+      type: object
+      required:
+        - nama
+        - nik
+      properties:
+        nama:
+          type: string
+          description: name of the user
+          example: John Doe
+          x-oapi-codegen-extra-tags:
+            validate: required
+        nik:
+          type: string
+          description: user personal identification number
+          example: 7293847582837251
+          x-oapi-codegen-extra-tags:
+            validate: required,len=16
+        no_hp:
+          type: string
+          description: user phone number
+          example: 081123456789
+          x-oapi-codegen-extra-tags:
+            validate: required
+    UserPostResponse:
+      type: object
+      required:
+        - no_rekening
+      properties:
+        no_rekening:
+          type: string
+          description: user bank account number
+          example: 2342342342
+    TransactionRequest:
+      type: object
+      required:
+        - no_rekening
+        - nominal
+      properties:
+        no_rekening:
+          type: string
+          description: user bank account number
+          example: 2342342342
+          x-oapi-codegen-extra-tags:
+            validate: required
+        nominal:
+          type: integer
+          format: int64
+          description: amount to be stored in IDR
+          example: 1000000
+          x-oapi-codegen-extra-tags:
+            validate: required,gt=0
+    TransactionResponse:
+      type: object
+      required:
+        - saldo
+      properties:
+        saldo:
+          type: integer
+          format: int64
+          description: user bank account balance
+          example: 10000000
