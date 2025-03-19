@@ -10,6 +10,7 @@ import (
 type IService interface {
 	GetBalance(ctx context.Context, accountNo string) (types.GetBalanceOutput, error)
 	StoreCash(ctx context.Context, input types.TransactionInput) (types.GetBalanceOutput, error)
+	WithdrawCash(ctx context.Context, input types.TransactionInput) (types.GetBalanceOutput, error)
 }
 
 type Service struct {
