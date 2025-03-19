@@ -2,6 +2,8 @@ package core
 
 import (
 	"context"
+	"errors"
+	"syscall"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
@@ -45,7 +47,7 @@ func (d *Dependency) GracefulShutdown(ctx context.Context) int {
 	}
 
 	err = d.Logger.Sync()
-	if err != nil {
+	if err != nil && !errors.Is(err, syscall.ENOTTY) {
 		d.Logger.Error("failed to flush log", zap.Error(err))
 		code = 1
 	} else {

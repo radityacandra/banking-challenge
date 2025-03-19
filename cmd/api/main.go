@@ -31,7 +31,7 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
 
-	db, err := database.Init(ctx, "")
+	db, err := database.Init(ctx, config.PostgresUri)
 	if err != nil {
 		logger.Fatal("failed to establish db connection", zap.Error(err))
 		return

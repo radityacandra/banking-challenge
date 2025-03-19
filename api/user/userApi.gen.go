@@ -22,7 +22,7 @@ type UserPostRequest struct {
 	Nik string `json:"nik" validate:"required,len=16"`
 
 	// NoHp user phone number
-	NoHp *string `json:"no_hp,omitempty" validate:"required"`
+	NoHp string `json:"no_hp" validate:"required"`
 }
 
 // UserPostResponse defines model for UserPostResponse.
