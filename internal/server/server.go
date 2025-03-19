@@ -11,6 +11,7 @@ import (
 	userAccountHandler "github.com/radityacandra/banking-challenge/internal/application/user-account/handler"
 	"github.com/radityacandra/banking-challenge/internal/application/user/handler"
 	"github.com/radityacandra/banking-challenge/internal/core"
+	"github.com/radityacandra/banking-challenge/pkg/validator"
 	"go.uber.org/zap"
 )
 
@@ -18,6 +19,8 @@ func InitServer(ctx context.Context, deps *core.Dependency) {
 	e := echo.New()
 	e.HideBanner = true
 	e.HidePort = true
+	e.Validator = validator.NewValidator()
+
 	e.Use(middleware.CORS())
 
 	userHandler := handler.NewHandler(deps)

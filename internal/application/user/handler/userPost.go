@@ -16,7 +16,11 @@ func (h *Handler) UserPost(ctx echo.Context) error {
 		})
 	}
 
-	// TODO: perform validator
+	if err := ctx.Validate(reqBody); err != nil {
+		return ctx.JSON(http.StatusBadRequest, api.DefaultErrorResponse{
+			Remarks: err.Error(),
+		})
+	}
 
 	reqCtx := ctx.Request().Context()
 	output, err := h.Service.RegisterUser(reqCtx, types.RegisterUserInput{
