@@ -45,6 +45,13 @@ func NewValidator() *Validator {
 		return t
 	})
 
+	validate.RegisterTranslation("len", translator, func(ut ut.Translator) error {
+		return ut.Add("len", "{0} must be greater than {1} length", true)
+	}, func(ut ut.Translator, fe validator.FieldError) string {
+		t, _ := ut.T("len", fe.Field(), fe.Param())
+		return t
+	})
+
 	return &Validator{
 		Validator:  validate,
 		Translator: translator,

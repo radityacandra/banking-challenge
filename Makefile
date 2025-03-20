@@ -5,3 +5,9 @@ generate:
 
 generate_mock:
 	mockery
+
+test_unit:
+	go test -short ./...
+
+test_integration:
+	go test ./...
